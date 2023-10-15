@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductCollection;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -28,6 +29,25 @@ class ProductController extends Controller
         }
         
         return new ProductCollection($query->paginate(3));
+    }
+
+    public function registerProduct(ProductRequest $request)
+    {      
+        // Validate request
+        $data = $request->validated();
+
+        // Store product
+        Product::create([
+            'name' => $data['name'],
+            'quantity' => $data['quantity'],
+            'price' => $data['price'],
+            'image' => $data['image'],
+            'category_id' => $data['category_id'],
+        ]);
+
+        return [
+            'message' => 'Product stored successfully'
+        ];
     }
 
     /**
